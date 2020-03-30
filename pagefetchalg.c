@@ -6,8 +6,8 @@
 
 int optimal(int, int*);
 int LRU(int, int*);
-void FIFO(int, int, int*, int*);
 
+/* this code compares a "least recently used" page fetching scheme to an optimal solution*/
 int main(int argc, char *argv[]){
         if(argc != 2){printf("usage: include number of frames in command line");exit(-1);}
         int numFrame = atoi(argv[1]);
