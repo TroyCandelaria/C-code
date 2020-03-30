@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
 
         printf("\nrefrence strint: ");
         for(int i = 0; i < refSize; i++){
+                //fills a refrence string with values 1-5
                 ref[i] =  (rand() % 5) + 1;
                 printf("%i ", ref[i]);
         }
@@ -41,7 +42,7 @@ int optimal(int numFrame, int *ref){
                 int hit = 0;
 
                 for(int j = 0; j < numFrame; j++){
-
+                        //compare ref to all val in frame to see if theres a page match
                         if(*(frame + j) == *(ref + i)){
                                 printf("hit ");
                                 hit = 1;
@@ -66,10 +67,12 @@ int optimal(int numFrame, int *ref){
                 if(!hit){
                         //optimal
                         int count = 0;
+                        //initalises a distance array
                         int dist[numFrame];
                         for(int j = 0; j < numFrame; j++){
                                 dist[j] = -1;
                         }
+                        //find the page that will be refrence the latest
                         for(int j = i; j < refSize; j++){
                                 for(int k = 0; k < numFrame; k++){
                                         if(*(frame + k) == *(ref + j) && dist[k] == -1){
@@ -79,6 +82,7 @@ int optimal(int numFrame, int *ref){
                         }
                         int great = 0;
                         int index = -1;
+                        //replace latest refrences page with current page
                         for(int j = 0; j < numFrame; j++){
                                 if(dist[j] == -1){
                                         index = j;
@@ -96,11 +100,6 @@ int optimal(int numFrame, int *ref){
                                 printf("replaced using optimal ");
                                 *(frame + index) = *(ref + i);
                         }
-                }
-
-                if(!hit){
-                        printf("replaced using FIFO");
-                        FIFO(i, numFrame, frame, ref);
                 }
                 //print frames
                 for(int j = 0; j < numFrame; j++){
@@ -123,6 +122,7 @@ int LRU(int numFrame, int *ref){
 
                 int hit = 0;
                 for(int j = 0; j < numFrame; j++){
+                        //compare ref to all val in frame to see if theres a page match
                         if(*(frame + j) == *(ref + i)){
                                 printf("hit ");
                                 hit = 1;
@@ -149,6 +149,7 @@ int LRU(int numFrame, int *ref){
                         for(int j = 0; j < numFrame; j++){
                                 dist[j] = -1;
                         }
+                        //finds page that was refrenced the longest time ago
                         for(int j = i; j >= 0; j--){
                                 for(int k = 0; k < numFrame; k++){
                                         if(*(frame + k) == *(ref + j) && dist[k] == -1){
@@ -159,7 +160,8 @@ int LRU(int numFrame, int *ref){
 
                         int great = 0;
                         int index = -1;
-
+                        
+                        //replace LRU page with curent page
                         for(int j = 0; j < numFrame; j++){
                                 if(dist[j] > great){
                                         great = dist[j];
@@ -172,10 +174,6 @@ int LRU(int numFrame, int *ref){
                                 *(frame + index) = *(ref + i);
                         }
                 }
-                if(!hit){
-                        printf("replaced using FIFO");
-                        FIFO(i, numFrame, frame, ref);
-                }
                 //print frames
                 for(int j = 0; j < numFrame; j++){
                 printf("%i ", *(frame + j));
@@ -184,22 +182,4 @@ int LRU(int numFrame, int *ref){
 
         }
         return numFaults;
-}
-
-void FIFO(int i, int numFrame, int *frame, int *ref){
-        int count = 0;
-        int j = 0;
-        int index = i;
-        int yo = 0;
-
-        while(count != 3){
-                index--;
-                for(j = 0; j < numFrame; j++){
-                        if(*(frame + j) == *(ref + index)){
-                                count++;
-                                yo = j;
-                        }
-                }
-        }
-        *(frame + yo) = *(ref + i);
 }
